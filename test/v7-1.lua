@@ -1,5 +1,5 @@
 -- 1. Load the UI Library from your GitHub source
-local AetherAPI = loadstring(game:HttpGet("https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/main/v1.lua"))()
+local AetherAPI = loadstring(game:HttpGet("https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/main/v7.lua"))()
 
 -- 2. Create the window
 local UI = AetherAPI.new("Aether Control Panel", Vector2.new(580, 440))
