@@ -1,6 +1,5 @@
 --[[
-    Aether UI Library - Version 3.3 (Patched)
-    Fixes: Outer left/top border dragging to move, interactive numeric slider with value indicator.
+    Aether UI Library - Version 5
 --]]
 
 local Aether = {}
