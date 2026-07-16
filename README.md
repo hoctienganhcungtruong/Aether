@@ -15,7 +15,11 @@ local Aether = loadstring(game:HttpGet("https://raw.githubusercontent.com/hoctie
 local Window = Aether.new("Aether Base")
 
 ```
+A demo of Aether:
 
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/refs/heads/main/test/test-v1.lua"))()
+```
 ---
 
 ## API Reference
