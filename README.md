@@ -1,145 +1,246 @@
-# Aether
+# Aether UI Library
 
-A modern, loadstring-compatible, and responsive Lua UI library for Roblox executors. Designed with a CSS-inspired purplish theme, featuring responsive desktop/mobile dragging, side-tabs, and an HTML-like Rich Text semantic engine.
-
----
-
-## 🚀 Installation & Initialization
-
-Fetch the library dynamically using `loadstring`:
-
-```lua
-local Aether = loadstring(game:HttpGet("https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/main/v1.lua"))()
-
--- Create the main UI Window
-local Window = Aether.new("Aether Base")
-
-```
-A demo of Aether:
-
-```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/refs/heads/main/test/test-v1.lua"))()
-```
----
-
-## API Reference
-
-### Create Window
-
-```lua
-local Window = Aether.new(titleText)
-
-```
-
-* **`titleText`** (string): The title displayed in the upper-left sidebar.
-* **Returns**: Window Object.
-
-### Create Tab
-
-```lua
-local Tab = Window:AddTab(tabName)
-
-```
-
-* **`tabName`** (string): The text shown on the sidebar navigation button.
-* **Returns**: Tab Object.
+A high-performance, modern, and dark-themed Luau user interface library designed specifically for Roblox scripting environments. Aether UI combines a sleek, modern visual aesthetic with robust mechanics like dual-edge dragging, a multi-handle drag system, dynamic canvas scaling, and programmatic layout adjustments.
 
 ---
 
-## Tab Elements
+## Key Features
 
-### 1. Semantic Text Labels
+*   🎨 **Fully Customizable Themes:** Overwrite or modify the modern dark indigo color palette to match your branding.
+*   📐 **Dynamic Programmatic Resize:** Resize your window layout smoothly using custom duration tweens with state synchronization.
+*   ↕️ **Dual-Edge & Corner Resizing:** Manual resizing handles let users grab the right edge, bottom edge, or corner grip to scale manually.
+*   🎛️ **Rich Component Suite:** Built-in controls including Saturation-Value color pickers, dynamic sliders, collapsible folders, and dual button-inputs.
+*   ⚡ **Robust Drag System:** Drag the window seamlessly via the topbar, outer left border, or outer top border.
 
-Supports HTML-style tag categorization. Native Roblox formatting (`<b>`, `<i>`, `<s>`) parses automatically when `RichText` is enabled.
+---
 
-```lua
-Tab:AddLabel("Main Header", "h1")
-Tab:AddLabel("Sub Header", "h2")
-Tab:AddLabel("Standard Paragraph with <b>bold text</b>", "p")
+## Installation & Setup
 
-```
-
-* **Available tags**: `"h1"`, `"h2"`, `"h3"`, `"h4"`, `"h5"`, `"h6"`, `"p"`
-
-### 2. Button
+Load the library directly into your Luau script execution environment:
 
 ```lua
-Tab:AddButton("Execute Script", function()
-    print("Executed!")
-end)
-
-```
-
-### 3. Toggle
-
-```lua
-Tab:AddToggle("God Mode", false, function(state)
-    print("Toggle is now:", state)
-end)
-
-```
-
-### 4. Text Input
-
-```lua
-Tab:AddInput("Walkspeed", "Enter speed...", function(text, enterPressed)
-    print("Input changed to:", text)
-end)
-
-```
-
-### 5. Color Picker
-
-Quick-select color swapper cycling through essential accent choices.
-
-```lua
-Tab:AddColorPicker("ESP Color", Color3.fromRGB(140, 82, 255), function(color)
-    print("Color selected:", color)
-end)
-
-```
-
-### 6. Collapsible Block (Accordion)
-
-Creates an expandable/collapsible canvas container. Returns a frame to layout inner elements.
-
-```lua
-local Collapsible = Tab:AddCollapsible("Advanced Options")
-
-```
-
-### 7. Button + Input (Combined)
-
-Combines an input field and a validation button into one sleek row. Passes the text input directly to the button callback.
-
-```lua
-Tab:AddButtonWithInput("Set JumpPower", "Type value...", function(value)
-    local num = tonumber(value)
-    if num then
-        game.Players.LocalPlayer.Character.Humanoid.JumpPower = num
-    end
-end)
+local Aether = loadstring(game:HttpGet("https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/main/v9.lua"))()
 
 ```
 
 ---
 
-## Theme Properties
+## Theme Customization
 
-Modify these colors directly in the top block of the source code to customize your UI theme:
+You can customize the visual colors of the library before calling `Aether.new()`. To do this, simply modify the values in the public dictionary or define your custom colors:
+
+---
+
+## API Documentation
+
+### Window Setup
+
+#### `Aether.new(titleText, initialSize, minSize)`
+
+Creates a new root UI window instance.
+
+* `titleText` (string) — The title displayed in the topbar header.
+* `initialSize` (Vector2, optional) — The starting width and height (Default: `580, 380`).
+* `minSize` (Vector2, optional) — The minimum size limits for manual resize boundaries (Default: `450, 250`).
 
 ```lua
+local UI = Aether.new("My Script Menu", Vector2.new(580, 420), Vector2.new(450, 250))
+
+```
+
+#### `UI:Resize(newSize, tweenDuration)`
+
+Programmatically scales the UI main frame size.
+
+* `newSize` (Vector2) — The target width and height dimensions.
+* `tweenDuration` (number, optional) — The transition time in seconds. Leaving this blank or using `0` scales the UI instantly.
+
+```lua
+-- Instantly resize the frame
+UI:Resize(Vector2.new(650, 450))
+
+-- Smoothly animate transition over 0.4 seconds
+UI:Resize(Vector2.new(650, 450), 0.4)
+
+```
+
+#### `UI:AddTab(tabName)`
+
+Adds a sidebar navigation tab button and content container.
+
+* `tabName` (string) — Name of the navigation tab.
+* **Returns**: A `Tab` object.
+
+```lua
+local MainTab = UI:AddTab("Combat")
+
+```
+
+---
+
+### Tab Elements
+
+#### `Tab:AddLabel(text, tag)`
+
+Creates a structured text label supporting Roblox RichText.
+
+* `text` (string) — Text string payload.
+* `tag` (string, optional) — Semantic styles: `"h1"` (Title), `"h2"` (Subheader), `"h3"`, `"h4"`, or `"p"` (Paragraph text).
+
+```lua
+MainTab:AddLabel("Visual Modules", "h1")
+
+```
+
+#### `Tab:AddButton(text, callback)`
+
+Appends a sleek interactive button.
+
+* `text` (string) — Action text.
+* `callback` (function) — Triggers when clicked.
+
+```lua
+MainTab:AddButton("Destroy Projectiles", function()
+    -- Your action here
+end)
+
+```
+
+#### `Tab:AddToggle(text, default, callback)`
+
+Appends a modern state switch.
+
+* `text` (string) — Toggle label description.
+* `default` (boolean) — Initial state.
+* `callback` (function) — Triggers and returns boolean state (`true`/`false`).
+
+```lua
+MainTab:AddToggle("Infinite Ammo", false, function(state)
+    -- Your action here
+end)
+
+```
+
+#### `Tab:AddInput(text, placeholder, callback)`
+
+Appends a textbox field with placeholder text.
+
+* `text` (string) — Label description.
+* `placeholder` (string) — Textbox hint.
+* `callback` (function) — Triggers `(text, enterPressed)` on focus loss.
+
+```lua
+MainTab:AddInput("Speed Adjuster", "e.g., 25", function(value, enterPressed)
+    if enterPressed then print("Entered:", value) end
+end)
+
+```
+
+#### `Tab:AddSlider(text, min, max, default, callback)`
+
+Appends a clean slider with an updating numerical readout.
+
+* `text` (string) — Slider name.
+* `min`, `max` (number) — Numerical range.
+* `default` (number) — Initial value.
+* `callback` (function) — Returns selected integer on drag.
+
+```lua
+MainTab:AddSlider("Field of View", 70, 120, 90, function(value)
+    -- Your action here
+end)
+
+```
+
+#### `Tab:AddColorPicker(text, defaultColor, callback)`
+
+Appends an expandable 2D Color canvas with hue spectrum slider.
+
+* `text` (string) — Name label.
+* `defaultColor` (Color3) — Color loaded on startup.
+* `callback` (function) — Returns updating `Color3` object.
+
+```lua
+MainTab:AddColorPicker("Esp Color", Color3.fromRGB(140, 82, 255), function(color)
+    -- Your action here
+end)
+
+```
+
+#### `Tab:AddCollapsible(text)`
+
+Appends a collapsable menu module to stack components logically.
+
+* `text` (string) — Group header title.
+* **Returns**: A `SubTab` folder capable of holding sub-buttons and labels.
+
+```lua
+local Folder = MainTab:AddCollapsible("Extra Settings")
+Folder:AddButton("Perform Wipe", function() end)
+
+```
+
+#### `Tab:AddButtonWithInput(buttonText, placeholder, callback)`
+
+A modern dual element holding a textbox and custom button packed in a single row.
+
+* `buttonText` (string) — Trigger button label.
+* `placeholder` (string) — Textbox hint.
+* `callback` (function) — Returns the typed input text `(value)` on button click.
+
+```lua
+MainTab:AddButtonWithInput("Teleport To Player", "Target Name...", function(name)
+    -- Your action here
+end)
+
+```
+### Default Color Palette
+
+```lua
+-- Access and modify the styling configurations
 local Theme = {
-    Background = Color3.fromRGB(15, 12, 24),        -- Main background
-    SidebarBg = Color3.fromRGB(22, 18, 36),         -- Sidebar background
-    ContainerBg = Color3.fromRGB(28, 24, 46),       -- Input/Button background
-    Accent = Color3.fromRGB(140, 82, 255),          -- Primary purple elements
-    AccentHover = Color3.fromRGB(162, 114, 255),    -- Interactive hover highlights
-    Text = Color3.fromRGB(245, 242, 255),           -- Active white text
-    TextMuted = Color3.fromRGB(150, 140, 175),      -- Off-white/gray descriptions
-    Border = Color3.fromRGB(45, 35, 70),            -- Outline stroke boundaries
-    BorderActive = Color3.fromRGB(100, 70, 180),    -- Active input boundaries
-    CornerRadius = UDim.new(0, 8),                  -- Component corner roundness
+    Background = Color3.fromRGB(15, 12, 24),     -- Main background panel
+    SidebarBg = Color3.fromRGB(22, 18, 36),      -- Left sidebar navigation background
+    ContainerBg = Color3.fromRGB(28, 24, 46),    -- Inner element boxes/cards
+    Accent = Color3.fromRGB(140, 82, 255),       -- Active purple accents, highlights, toggles
+    AccentHover = Color3.fromRGB(162, 114, 255),  -- Highlight hover effects
+    Text = Color3.fromRGB(245, 242, 255),        -- Primary headers & text
+    TextMuted = Color3.fromRGB(150, 140, 175),   -- Descriptions, placeholders, inactive buttons
+    Border = Color3.fromRGB(45, 35, 70),         -- Default borders and lines
+    BorderActive = Color3.fromRGB(100, 70, 180),  -- Highlighted or focused borders
+    CornerRadius = UDim.new(0, 8),               -- Frame corner roundness
 }
+
+```
+---
+
+## Full Code Demo
+
+```lua
+local Aether = loadstring(game:HttpGet("[https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/main/v9.lua](https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/main/v9.lua)"))()
+
+-- Instantiate UI Window
+local UI = Aether.new("⚡ Aether v5 Active Mod Menu", Vector2.new(580, 420))
+
+-- Create Tabs
+local MainTab = UI:AddTab("Main")
+local VisualsTab = UI:AddTab("Visuals")
+local SizingTab = UI:AddTab("Sizing")
+
+-- Create Controls
+MainTab:AddLabel("Player Modifiers", "h1")
+MainTab:AddToggle("Infinite Jump", false, function(state)
+    -- Code execution
+end)
+
+VisualsTab:AddColorPicker("Chams Color", Color3.fromRGB(255, 0, 100), function(color)
+    -- Code execution
+end)
+
+SizingTab:AddButton("Compact View", function()
+    UI:Resize(Vector2.new(460, 300), 0.3)
+end)
+
+```
 
 ```
