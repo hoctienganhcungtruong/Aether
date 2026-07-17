@@ -195,7 +195,7 @@ end)
 
 ```
 
-#### `Tab:AddDropdown(text, optionsArray, defaultDisplay, callback)
+#### `Tab:AddDropdown(text, optionsArray, defaultDisplay, callback)`
 Appends a advanced, polymorphic dropdown row. It accepts basic string arrays or structured dictionaries containing images, display text titles, and arbitrary values (such as `Vector3` coordinates, tables, or configurations). When an option is selected, it returns the completely raw, original data payload back to your callback function execution context.
 
 <ul>
