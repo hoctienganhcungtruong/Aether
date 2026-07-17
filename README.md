@@ -198,19 +198,13 @@ end)
 #### `Tab:AddDropdown(text, optionsArray, defaultDisplay, callback)`
 Appends a advanced, polymorphic dropdown row. It accepts basic string arrays or structured dictionaries containing images, display text titles, and arbitrary values (such as `Vector3` coordinates, tables, or configurations). When an option is selected, it returns the completely raw, original data payload back to your callback function execution context.
 
-<ul>
-    <li>`text` (string) — Dropdown menu header label description.</li>
-    <li>`optionsArray` (table) — An array list of strings, or dictionaries mapping out custom options:
-        <ul>
-            <li>`Display` or `Text` (string) — The text visible to the user on the screen.</li>
-            <li>`Value` (any, optional) — The raw hidden payload returned to your callback (e.g. `Vector3`, `boolean`, `table`). Defaults to the display string if left empty.</li>
-            <li>`Image` (number/string, optional) — A Roblox image asset ID to display as a custom option icon.</li>
-        </ul>
-    </li>
-    <li>`defaultDisplay` (string, optional) — The initial active choice text displayed inside the header panel on boot.</li>
-    <li>`callback` (function) — Fires and returns the raw `Value` payload object of the selected choice.</li>
-</ul>
-
+* `text` (string) — Dropdown menu header label description.
+* `optionsArray` (table) — An array list of strings, or dictionaries mapping out custom options:
+ * `Display` or `Text` (string) — The text visible to the user on the screen.
+ *`Value` (any, optional) — The raw hidden payload returned to your callback (e.g. `Vector3`, `boolean`, `table`). Defaults to the display string if left empty.
+ * `Image` (number/string, optional) — A Roblox image asset ID to display as a custom option icon.
+* `defaultDisplay` (string, optional) — The initial active choice text displayed inside the header panel on boot.
+* `callback` (function) — Fires and returns the raw `Value` payload object of the selected choice.</li>
 ```lua
 -- Example 1: Passing a dictionary array with explicit Vector3 coordinates and asset icons!
 local TeleportPoints = {
