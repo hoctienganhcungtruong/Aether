@@ -217,10 +217,10 @@ local Theme = {
 ## Full Code Demo
 
 ```lua
-local Aether = loadstring(game:HttpGet("[https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/main/v9.lua](https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/main/v9.lua)"))()
+local Aether = loadstring(game:HttpGet("https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/main/v9.lua"))()
 
 -- Instantiate UI Window
-local UI = Aether.new("⚡ Aether v5 Active Mod Menu", Vector2.new(580, 420))
+local UI = Aether.new("⚡ Aether v9 Active Mod Menu", Vector2.new(580, 420))
 
 -- Create Tabs
 local MainTab = UI:AddTab("Main")
@@ -240,7 +240,5 @@ end)
 SizingTab:AddButton("Compact View", function()
     UI:Resize(Vector2.new(460, 300), 0.3)
 end)
-
-```
 
 ```
