@@ -194,6 +194,43 @@ MainTab:AddButtonWithInput("Teleport To Player", "Target Name...", function(name
 end)
 
 ```
+
+#### `Tab:AddDropdown(text, optionsArray, defaultDisplay, callback)
+Appends a advanced, polymorphic dropdown row. It accepts basic string arrays or structured dictionaries containing images, display text titles, and arbitrary values (such as `Vector3` coordinates, tables, or configurations). When an option is selected, it returns the completely raw, original data payload back to your callback function execution context.
+
+<ul>
+    <li>`text` (string) — Dropdown menu header label description.</li>
+    <li>`optionsArray` (table) — An array list of strings, or dictionaries mapping out custom options:
+        <ul>
+            <li>`Display` or `Text` (string) — The text visible to the user on the screen.</li>
+            <li>`Value` (any, optional) — The raw hidden payload returned to your callback (e.g. `Vector3`, `boolean`, `table`). Defaults to the display string if left empty.</li>
+            <li>`Image` (number/string, optional) — A Roblox image asset ID to display as a custom option icon.</li>
+        </ul>
+    </li>
+    <li>`defaultDisplay` (string, optional) — The initial active choice text displayed inside the header panel on boot.</li>
+    <li>`callback` (function) — Fires and returns the raw `Value` payload object of the selected choice.</li>
+</ul>
+
+```lua
+-- Example 1: Passing a dictionary array with explicit Vector3 coordinates and asset icons!
+local TeleportPoints = {
+    {Display = "Spawn Area", Value = Vector3.new(0, 50, 0), Image = 10839423450},
+    {Display = "Desert Base", Value = Vector3.new(1420, 12, -85), Image = 10839424121},
+    {Display = "Secret Vault", Value = Vector3.new(-500, -100, 2500)}
+}
+
+MainTab:AddDropdown("Warp Destination", TeleportPoints, "Spawn Area", function(targetVector)
+    -- 'targetVector' passed here is a pure Vector3 data type, not a text string!
+    local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if root then root.CFrame = CFrame.new(targetVector) end
+end)
+
+-- Example 2: Still completely backwards-compatible with simple string lists!
+MainTab:AddDropdown("Weapon Loadout", {"M4A1", "AWM", "Deagle"}, "M4A1", function(selectedWeapon)
+    print("Equipped text name string: " .. selectedWeapon)
+end)
+```
+
 ### Default Color Palette
 
 ```lua
