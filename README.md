@@ -8,7 +8,6 @@ A high-performance, modern, and dark-themed Luau user interface library designed
 
 *   🎨 **Fully Customizable Themes:** Overwrite or modify the modern dark indigo color palette to match your branding.
 *   📐 **Dynamic Programmatic Resize:** Resize your window layout smoothly using custom duration tweens with state synchronization.
-*   ↕️ **Dual-Edge & Corner Resizing:** Manual resizing handles let users grab the right edge, bottom edge, or corner grip to scale manually.
 *   🎛️ **Rich Component Suite:** Built-in controls including Saturation-Value color pickers, dynamic sliders, collapsible folders, and dual button-inputs.
 *   ⚡ **Robust Drag System:** Drag the window seamlessly via the topbar, outer left border, or outer top border.
 
@@ -47,16 +46,16 @@ Every tab object created via Window:AddTab() supports the following component me
 
 ## `Tab:AddLabel(text, tag)`
 Adds a styled text label. Supports HTML-like formatting tags and RichText formatting.
-- `text (string)`: Text string to display.
-- `tag` (string, optional): Style preset key. Supported tags:
- - `"h1"` – Header 1 (Size 22, Bold)
- - `"h2"` – Header 2 (Size 18, Bold)
- - `"h3"` – Header 3 (Size 16, Semibold)
- - `"h4"` – Header 4 (Size 14, Semibold)
- - `"p"` – Paragraph (Size 13, Regular) (default)
- - `"b"` – Bold text
- - `"i"` – Italic text
- - `"s"` – Strikethrough text
+* `text (string)`: Text string to display.
+* `tag` (string, optional): Style preset key. Supported tags:
+    * `"h1"` – Header 1 (Size 22, Bold)
+    * `"h2"` – Header 2 (Size 18, Bold)
+    * `"h3"` – Header 3 (Size 16, Semibold)
+    * `"h4"` – Header 4 (Size 14, Semibold)
+    * `"p"` – Paragraph (Size 13, Regular) (default)
+    * `"b"` – Bold text
+    * `"i"` – Italic text
+    * `"s"` – Strikethrough text
 ```lua
 MainTab:AddLabel("Main Title", "h1")
 MainTab:AddLabel("This is a description text.", "p")
