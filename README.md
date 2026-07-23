@@ -14,233 +14,252 @@ A high-performance, modern, and dark-themed Luau user interface library designed
 
 ---
 
-## Installation & Setup
+# Initialization & Window API
 
-Load the library directly into your Luau script execution environment:
-
+## `Aether.new(titleText, initialSize, minSize)`
+Creates and returns a new Aether UI Window instance
+- `titleText` (string): Text displayed in the top bar
+- `initialSize` (Vector2, optional): (Vector2, optional): Initial size of the window (Default: `Vector2.new(580, 380)`)
+- `minSize` (Vector2, optional): Minimum size constraint (Default: `Vector2.new(450, 250)`)
 ```lua
-local Aether = loadstring(game:HttpGet("https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/main/v9.lua"))()
-
+local Aether = loadstring(game:HttpGet("https://cdn.jsdelivr.net/gh/hoctienganhcungtruong/Aether@main/latest.lua"))()
+local Window = Aether.new("Aether Hub", Vector2.new(600, 400))
 ```
 
----
-
-## Theme Customization
-
-You can customize the visual colors of the library before calling `Aether.new()`. To do this, simply modify the values in the public dictionary or define your custom colors:
-
----
-
-## API Documentation
-
-### Window Setup
-
-#### `Aether.new(titleText, initialSize, minSize)`
-
-Creates a new root UI window instance.
-
-* `titleText` (string) — The title displayed in the topbar header.
-* `initialSize` (Vector2, optional) — The starting width and height (Default: `580, 380`).
-* `minSize` (Vector2, optional) — The minimum size limits for manual resize boundaries (Default: `450, 250`).
-
+## `Window:Resize(newSize, tweenDuration)`
+Resizes the main window frame, optionally animating the transition.
+- `newSize` (Vector2): Target dimensions for the window.
+- `tweenDuration` (number, optional): Duration of the resize animation in seconds.
 ```lua
-local UI = Aether.new("My Script Menu", Vector2.new(580, 420), Vector2.new(450, 250))
-
+Window:Resize(Vector2.new(700, 500), 0.3)
 ```
 
-#### `UI:Resize(newSize, tweenDuration)`
-
-Programmatically scales the UI main frame size.
-
-* `newSize` (Vector2) — The target width and height dimensions.
-* `tweenDuration` (number, optional) — The transition time in seconds. Leaving this blank or using `0` scales the UI instantly.
-
+## `Window:AddTab(tabName)`
+Adds a new navigation tab to the window sidebar and returns a Tab instance.
+- `tabName` (string): Name of the tab shown on the sidebar button.
 ```lua
--- Instantly resize the frame
-UI:Resize(Vector2.new(650, 450))
-
--- Smoothly animate transition over 0.4 seconds
-UI:Resize(Vector2.new(650, 450), 0.4)
-
+local SettingsTab = Window:AddTab("Settings")
 ```
 
-#### `UI:AddTab(tabName)`
+# Tab Component Methods
 
-Adds a sidebar navigation tab button and content container.
+Every tab object created via Window:AddTab() supports the following component methods:
 
-* `tabName` (string) — Name of the navigation tab.
-* **Returns**: A `Tab` object.
-
+## `Tab:AddLabel(text, tag)`
+Adds a styled text label. Supports HTML-like formatting tags and RichText formatting.
+- `text (string)`: Text string to display.
+- `tag` (string, optional): Style preset key. Supported tags:
+ - `"h1"` – Header 1 (Size 22, Bold)
+ - `"h2"` – Header 2 (Size 18, Bold)
+ - `"h3"` – Header 3 (Size 16, Semibold)
+ - `"h4"` – Header 4 (Size 14, Semibold)
+ - `"p"` – Paragraph (Size 13, Regular) (default)
+ - `"b"` – Bold text
+ - `"i"` – Italic text
+ - `"s"` – Strikethrough text
 ```lua
-local MainTab = UI:AddTab("Combat")
-
+MainTab:AddLabel("Main Title", "h1")
+MainTab:AddLabel("This is a description text.", "p")
 ```
 
----
-
-### Tab Elements
-
-#### `Tab:AddLabel(text, tag)`
-
-Creates a structured text label supporting Roblox RichText.
-
-* `text` (string) — Text string payload.
-* `tag` (string, optional) — Semantic styles: `"h1"` (Title), `"h2"` (Subheader), `"h3"`, `"h4"`, or `"p"` (Paragraph text).
-
+## `Tab:AddButton(text, callback)`
+Adds a standard clickable action button.
+- `text` (string): Button label text.
+- `callback` (function): Function called when clicked
 ```lua
-MainTab:AddLabel("Visual Modules", "h1")
-
+MainTab:AddButton("Execute", function()
+    print("Action executed")
+end)
 ```
 
-#### `Tab:AddButton(text, callback)`
+## `Tab:AddToggle(text, default, callback)`
+Adds an interactive toggle switch.
+- `text` (string): Label text.
+- `default` (boolean): Initial state (true or false).
+- `callback` (function): Function called on toggle state change. Receives (toggled: boolean)
+```lua
+MainTab:AddToggle("Auto Farm", false, function(enabled)
+    print("Auto Farm set to:", enabled)
+end)
+```
 
-Appends a sleek interactive button.
+## `Tab:AddDropdown(text, options, default, callback)`
+Adds an expandable dropdown menu with radio selection options.
+- `text` (string): Dropdown title label.  
+- `options` (table): Array of options.
+- `default` (any): Initially selected option.
+- `callback` (function): Function called when an option is chosen. Receives (`selectedOption`)
+```lua
+MainTab:AddDropdown("Choose Mode", {"Easy", "Medium", "Hard"}, "Medium", function(selected)
+    print("Difficulty set to:", selected)
+end)
+```
 
-* `text` (string) — Action text.
-* `callback` (function) — Triggers when clicked.
+## `Tab:AddInput(text, placeholder, callback)`
+Adds a text input box.
+- `text` (string): Label text.
+- `placeholder` (string): Placeholder text displayed inside the input field.
+- `callback` (function): Called on FocusLost. Receives (`inputText`, `enterPressed`).
+```lua
+MainTab:AddInput("Player Name", "Enter name...", function(text, enterPressed)
+    if enterPressed then
+        print("Submitted text:", text)
+    end
+end)
+```
+
+## `Tab:AddKeybind(text, defaultKey, callback)`
+Adds a keybind picker component.
+- `text` (string): Keybind action description.
+- `defaultKey` (Enum.KeyCode): Default trigger key (e.g., `Enum.KeyCode.E`).
+- `callback` (function): Triggered when the assigned key is pressed.
+```lua
+MainTab:AddKeybind("Teleport Key", Enum.KeyCode.T, function(pressedKey)
+    print("Teleport key pressed!")
+end)
+```
+
+## `Tab:AddSlider(text, min, max, default, callback)`
+Adds an interactive slider component.
+- `text` (string): Title label.
+- `min` (number): Minimum allowed value.
+- `max` (number): Maximum allowed value.
+- `default` (number): Initial slider value.
+- `callback` (function): Called when slider moves. Receives (`integerValue`). 
+
+## `Tab:AddColorPicker(text, defaultColor, callback)`
+Adds an HSV color picker with visual saturation/value selection and a hue bar.
+- `text` (string): Component label.
+- `defaultColor` (Color3): Initial selected color.
+- `callback` (function): Triggered upon color selection. Receives (`color3Value`).
+```lua
+MainTab:AddColorPicker("Accent Color", Color3.fromRGB(140, 82, 255), function(color)
+    print("Selected Color:", color)
+end)
+```
+
+## `Tab:AddCollapsible(text)`
+Creates an expandable/collapsible accordion container for sub-items and returns a SubTab instance.
+- `text` (string): Title header for the collapsible section.
+
+### `SubTab` Methods
+
+- `SubTab:AddButton(btnText, callback)`: Adds a button inside the collapsible container.
+- `SubTab:AddLabel(labelText, tag)`: Adds a label inside the collapsible container.
+```lua
+local Group = MainTab:AddCollapsible("Advanced Controls")
+
+Group:AddLabel("These settings are optional.", "p")
+Group:AddButton("Reset Settings", function()
+    print("Resetting settings...")
+end)
+```
+
+## `Tab:AddButtonWithInput(buttonText, placeholder, callback)`
+Adds an inline action block containing a text input field accompanied by a button.
+- `buttonText` (string): Action button label.
+- `placeholder` (string): Input field placeholder.
+- `callback` (function): Triggered when clicking the action button. Receives (`inputText`).
+```lua
+MainTab:AddButtonWithInput("Teleport", "Target Player Name...", function(inputText)
+    print("Teleporting to:", inputText)
+end)
+```
+
+# Sample code
 
 ```lua
-MainTab:AddButton("Destroy Projectiles", function()
-    -- Your action here
+-- Load Aether (Replace with your actual loader script / file path)
+local Aether = loadstring(game:HttpGet("https://cdn.jsdelivr.net/gh/hoctienganhcungtruong/Aether@main/latest.lua"))()
+
+-- 1. WINDOW INSTANTIATION (titleText, initialSize, minSize)
+local Window = Aether.new("Aether Showcase Dashboard", Vector2.new(620, 420), Vector2.new(450, 250))
+
+-- Programmatically resize window (newSize, duration)
+Window:Resize(Vector2.new(640, 450), 0.3)
+
+-- 2. ADD TABS TO SIDEBAR
+local ElementsTab = Window:AddTab("Components")
+local PickersTab = Window:AddTab("Inputs & Keybinds")
+local ContainersTab = Window:AddTab("Containers")
+
+-- ====================================================================
+-- TAB 1: BASIC COMPONENTS & TYPOGRAPHY
+-- ====================================================================
+
+-- Typography Labels (Supports rich text and tags: h1, h2, h3, h4, p, b, i, s)
+ElementsTab:AddLabel("Typography Headers", "h1")
+ElementsTab:AddLabel("Subheading level 2", "h2")
+ElementsTab:AddLabel("Section header level 3", "h3")
+ElementsTab:AddLabel("Minor header level 4", "h4")
+ElementsTab:AddLabel("Paragraph text describing the standard components below.", "p")
+ElementsTab:AddLabel("Bold styled label text", "b")
+ElementsTab:AddLabel("Italic styled label text", "i")
+ElementsTab:AddLabel("Strikethrough styled label text", "s")
+
+-- Standard Clickable Button
+ElementsTab:AddButton("Click Action Button", function()
+    print("Standard Button Clicked!")
 end)
 
-```
-
-#### `Tab:AddToggle(text, default, callback)`
-
-Appends a modern state switch.
-
-* `text` (string) — Toggle label description.
-* `default` (boolean) — Initial state.
-* `callback` (function) — Triggers and returns boolean state (`true`/`false`).
-
-```lua
-MainTab:AddToggle("Infinite Ammo", false, function(state)
-    -- Your action here
+-- Toggle Switch (text, default, callback)
+ElementsTab:AddToggle("Enable Feature State", false, function(toggled)
+    print("Toggle State Changed:", toggled)
 end)
 
-```
-
-#### `Tab:AddInput(text, placeholder, callback)`
-
-Appends a textbox field with placeholder text.
-
-* `text` (string) — Label description.
-* `placeholder` (string) — Textbox hint.
-* `callback` (function) — Triggers `(text, enterPressed)` on focus loss.
-
-```lua
-MainTab:AddInput("Speed Adjuster", "e.g., 25", function(value, enterPressed)
-    if enterPressed then print("Entered:", value) end
+-- Number Slider (text, min, max, default, callback)
+ElementsTab:AddSlider("WalkSpeed Modifier", 16, 200, 16, function(value)
+    local player = game:GetService("Players").LocalPlayer
+    if player.Character and player.Character:FindFirstChild("Humanoid") then
+        player.Character.Humanoid.WalkSpeed = value
+    end
 end)
 
-```
-
-#### `Tab:AddSlider(text, min, max, default, callback)`
-
-Appends a clean slider with an updating numerical readout.
-
-* `text` (string) — Slider name.
-* `min`, `max` (number) — Numerical range.
-* `default` (number) — Initial value.
-* `callback` (function) — Returns selected integer on drag.
-
-```lua
-MainTab:AddSlider("Field of View", 70, 120, 90, function(value)
-    -- Your action here
+-- Dropdown Menu (text, optionsTable, defaultOption, callback)
+ElementsTab:AddDropdown("Select Game Mode", {"Casual", "Competitive", "Hardcore"}, "Casual", function(selectedOption)
+    print("Dropdown Selected Option:", selectedOption)
 end)
 
-```
 
-#### `Tab:AddColorPicker(text, defaultColor, callback)`
+-- ====================================================================
+-- TAB 2: INPUTS, KEYBINDS & COLOR PICKERS
+-- ====================================================================
 
-Appends an expandable 2D Color canvas with hue spectrum slider.
+PickersTab:AddLabel("Interactive Input Controls", "h2")
 
-* `text` (string) — Name label.
-* `defaultColor` (Color3) — Color loaded on startup.
-* `callback` (function) — Returns updating `Color3` object.
-
-```lua
-MainTab:AddColorPicker("Esp Color", Color3.fromRGB(140, 82, 255), function(color)
-    -- Your action here
+-- Text Input Field (text, placeholder, callback)
+PickersTab:AddInput("Player Username", "Type username...", function(inputText, enterPressed)
+    print("Input Text:", inputText, "Submitted with Enter:", enterPressed)
 end)
 
-```
-
-#### `Tab:AddCollapsible(text)`
-
-Appends a collapsable menu module to stack components logically.
-
-* `text` (string) — Group header title.
-* **Returns**: A `SubTab` folder capable of holding sub-buttons and labels.
-
-```lua
-local Folder = MainTab:AddCollapsible("Extra Settings")
-Folder:AddButton("Perform Wipe", function() end)
-
-```
-
-#### `Tab:AddButtonWithInput(buttonText, placeholder, callback)`
-
-A modern dual element holding a textbox and custom button packed in a single row.
-
-* `buttonText` (string) — Trigger button label.
-* `placeholder` (string) — Textbox hint.
-* `callback` (function) — Returns the typed input text `(value)` on button click.
-
-```lua
-MainTab:AddButtonWithInput("Teleport To Player", "Target Name...", function(name)
-    -- Your action here
+-- Inline Button with Text Input (buttonText, placeholder, callback)
+PickersTab:AddButtonWithInput("Teleport Target", "Player name...", function(targetPlayer)
+    print("Executing Teleport Action to:", targetPlayer)
 end)
 
-```
-
-
-### Default Color Palette
-
-```lua
--- Access and modify the styling configurations
-local Theme = {
-    Background = Color3.fromRGB(15, 12, 24),     -- Main background panel
-    SidebarBg = Color3.fromRGB(22, 18, 36),      -- Left sidebar navigation background
-    ContainerBg = Color3.fromRGB(28, 24, 46),    -- Inner element boxes/cards
-    Accent = Color3.fromRGB(140, 82, 255),       -- Active purple accents, highlights, toggles
-    AccentHover = Color3.fromRGB(162, 114, 255),  -- Highlight hover effects
-    Text = Color3.fromRGB(245, 242, 255),        -- Primary headers & text
-    TextMuted = Color3.fromRGB(150, 140, 175),   -- Descriptions, placeholders, inactive buttons
-    Border = Color3.fromRGB(45, 35, 70),         -- Default borders and lines
-    BorderActive = Color3.fromRGB(100, 70, 180),  -- Highlighted or focused borders
-    CornerRadius = UDim.new(0, 8),               -- Frame corner roundness
-}
-
-```
----
-
-## Full Code Demo
-
-```lua
-local Aether = loadstring(game:HttpGet("https://raw.githubusercontent.com/hoctienganhcungtruong/Aether/main/v9.lua"))()
-
--- Instantiate UI Window
-local UI = Aether.new("⚡ Aether v9 Active Mod Menu", Vector2.new(580, 420))
-
--- Create Tabs
-local MainTab = UI:AddTab("Main")
-local VisualsTab = UI:AddTab("Visuals")
-local SizingTab = UI:AddTab("Sizing")
-
--- Create Controls
-MainTab:AddLabel("Player Modifiers", "h1")
-MainTab:AddToggle("Infinite Jump", false, function(state)
-    -- Code execution
+-- Keybind Picker (text, defaultKey, callback)
+PickersTab:AddKeybind("Trigger Ability Keybind", Enum.KeyCode.E, function(triggeredKey)
+    print("Keybind triggered via key:", triggeredKey.Name)
 end)
 
-VisualsTab:AddColorPicker("Chams Color", Color3.fromRGB(255, 0, 100), function(color)
-    -- Code execution
+-- HSV Color Picker (text, defaultColor3, callback)
+PickersTab:AddColorPicker("UI Accent Color", Color3.fromRGB(140, 82, 255), function(color)
+    print("Color Picker Selected RGB:", color.R * 255, color.G * 255, color.B * 255)
 end)
 
-SizingTab:AddButton("Compact View", function()
-    UI:Resize(Vector2.new(460, 300), 0.3)
-end)
 
+-- ====================================================================
+-- TAB 3: COLLAPSIBLE CONTAINERS
+-- ====================================================================
+
+ContainersTab:AddLabel("Collapsible Groups", "h2")
+
+-- Collapsible Accordion (text) -> Returns SubTab container
+local CollapsibleGroup = ContainersTab:AddCollapsible("Advanced Utilities")
+
+-- Adding SubTab elements inside the Collapsible Container
+CollapsibleGroup:AddLabel("Sub-element label inside container.", "p")
+CollapsibleGroup:AddButton("Execute Sub-Action", function()
+    print("Sub-button inside collapsible frame clicked!")
+end)
 ```
